@@ -1,0 +1,323 @@
+# This is the resume's source of truth. Edit, save, and refresh the website.
+# Use spaces for indentation. Quote dates, phone numbers, and text containing ": ".
+# Reorder sections to reorder the islands. Set enabled: false to hide a section.
+# Each section needs a unique id. Supported types:
+# about, experience, projects, skills, education, contact, text.
+version: 1
+
+profile:
+  name: Robert Skonieczny
+  headline: Infrastructure Software Engineer
+  location: New York, NY
+  # Keep a PDF in dist/assets/resume/ and point to it here.
+  resume_pdf: assets/resume/robert-skonieczny-resume.pdf
+  summary: >-
+    I’m an infrastructure software engineer in New York. My work has taken me from
+    healthcare software to lending systems and, now, infrastructure at Meta.
+  education:
+    - institution: City University of New York (CUNY) — College of Staten Island
+      degree: Bachelor of Science in Computer Science
+      location: New York, NY
+  email: robbieskonieczny@gmail.com
+  links:
+    - label: LinkedIn
+      url: https://www.linkedin.com/in/robert-skonieczny/
+
+sections:
+  # About and Contact use the information in profile above.
+  - id: about
+    type: about
+    title: My story
+    story_title: From healthcare software to infrastructure at scale.
+    paragraphs:
+      - >-
+        At Meta, I work on the systems that make infrastructure usage visible:
+        capacity insights, resource attribution, and distributed tracing.
+      - >-
+        Before that, I built software for loan eligibility, auditing, and lending
+        integrations at AmeriSave, and patient-facing and clinical workflows at
+        VitalCheck. Across these roles, my work connects backend systems to the
+        people and decisions that depend on them.
+    # Optional per island. Species: rabbit, fox, duck, deer, turtle.
+    # Count defaults to 1; scale defaults to 1. Use animals: [] for no animals.
+    animals:
+      - species: rabbit
+        count: 2
+        scale: 1.2
+      - species: turtle
+        scale: 1.3
+      - species: deer
+        count: 2
+
+  - id: experience
+    type: experience
+    title: Work with impact
+    label: My work
+    animals:
+      - species: fox
+    items:
+      - company: Meta
+        id: meta
+        focus: Infrastructure
+        overview: Making resource usage visible across large-scale infrastructure.
+        logo: assets/companies/meta.svg
+        team: Virtual Usage Infrastructure
+        role: Software Engineer — Infrastructure
+        location: New York, NY
+        period: "Feb 2025 — Present"
+        technologies:
+          - C++
+          - Python
+          - Hack
+          - Thrift
+          - Presto / SQL
+          - Real-time Stream Processing
+          - Data-intensive Batch Pipelines
+        # Stories turn resume facts into a short, explorable case study.
+        stories:
+          - id: capacity-insights
+            title: Seeing infrastructure usage in real time.
+            label: Capacity insights
+            metric:
+              value: "2.5 GB/s"
+              label: of infrastructure usage data
+            summary: A real-time view of capacity across $5.5B of Meta’s infrastructure.
+            challenge: >-
+              Capacity forecasting, planning, and fulfillment need visibility into
+              how infrastructure is being used. That means making a continuous
+              stream of usage data useful to the teams making those decisions.
+            work: >-
+              I architected and built a real-time stream processing platform for
+              capacity insights. I also drove the technical roadmap for the usage
+              platform, working across engineering teams to expand its adoption.
+            result: >-
+              The platform handles 2.5 GB/s of usage data across $5.5B of
+              infrastructure. It enables real-time observability and serves as
+              a foundation for capacity forecasting, planning, and fulfillment.
+            technologies: [Real-time Stream Processing]
+          - id: usage-attribution
+            title: Connecting resource usage to its cost.
+            label: Usage & cost
+            metric:
+              value: "$250M"
+              label: in potential annual operating savings identified
+            summary: More granular attribution makes resource dependencies and their costs easier to understand.
+            challenge: >-
+              Understanding infrastructure costs requires knowing which services
+              use which resources, and how usage should be attributed between platforms.
+            work: >-
+              I established a platform-to-platform usage billing strategy through
+              more granular resource attribution. I also maintain and enhance
+              the C++, Python, and Hack libraries used for usage ingestion and attribution.
+            result: >-
+              The billing strategy identified approximately $250M in potential
+              annual operating cost savings. The Hack ingestion library is invoked
+              approximately 2.6 billion times fleet-wide.
+            technologies: [C++, Python, Hack]
+          - id: distributed-tracing
+            title: Understanding services through their traces.
+            label: Distributed tracing
+            metric:
+              value: "60B"
+              label: service traces consumed daily, approximately
+            summary: Processing traces at scale and using sampled traces to understand resource attribution.
+            challenge: >-
+              Service traces provide a view into distributed systems. Making that
+              data useful at Meta’s scale requires both large-volume processing
+              and analysis of resource usage across services.
+            work: >-
+              I maintained and enhanced a Python-based distributed trace processing
+              platform. I also led Lineage Analysis, an initiative that uses sampled
+              distributed tracing to trace resource usage and attribution across services.
+            result: >-
+              The processing platform consumes approximately 60 billion service
+              traces daily. Lineage Analysis helps cross-functional teams understand
+              cost attribution across infrastructure.
+            technologies: [Python, Data-intensive Batch Pipelines]
+        highlights:
+          - >-
+            Architected and built a real-time stream processing capacity insights platform
+            handling 2.5 GB/s of usage data across $5.5B of Meta’s infrastructure, enabling
+            real-time observability and serving as the foundation for capacity forecasting,
+            planning, and fulfillment.
+          - >-
+            Drove the technical roadmap for Meta's real-time usage platform, influencing
+            multiple engineering teams and expanding adoption across infrastructure.
+          - >-
+            Maintains and enhances client libraries in C++, Python, and Hack for resource
+            usage ingestion and attribution, with the Hack library invoked approximately
+            2.6 billion times fleet wide.
+          - >-
+            Established a platform-to-platform usage billing strategy through more granular
+            resource attribution, providing deeper insight into resource dependencies and
+            identifying approximately $250M in potential annual operating cost savings.
+          - >-
+            Maintained and enhanced a Python-based distributed trace processing platform
+            consuming ~60 billion service traces daily.
+          - >-
+            Led the “Lineage Analysis” initiative, using sampled distributed tracing to trace
+            resource usage and attribution across services and help cross-functional teams
+            understand cost attribution across infrastructure.
+
+      - company: AmeriSave
+        id: amerisave
+        focus: Lending
+        overview: Building the systems behind loan decisions, auditing, and mortgage integrations.
+        logo: assets/companies/amerisave.ico
+        team: Financial Lending Institution
+        role: Software Engineer — Infrastructure
+        location: New York, NY
+        period: "April 2022 — Oct 2023 | May 2024 — Jan 2025"
+        technologies: [Java, Spring Boot, TypeScript, NestJS, SQL, Redis, GraphQL, Datadog, Azure]
+        stories:
+          - id: post-fund-auditing
+            title: Bringing post-fund auditing in-house.
+            label: Auditing
+            metric:
+              value: "$1M"
+              label: reduction in annual costs
+            summary: An internally built auditing system replaced a vendor’s service.
+            challenge: >-
+              Post-fund auditing relied on a vendor’s service. Building an internal
+              replacement offered an opportunity to reduce the cost of that process.
+            work: >-
+              I defined the roadmap and led the implementation of the post-fund
+              auditing system, taking it from a planned internal replacement to
+              a system that replaced the vendor’s service.
+            result: The replacement reduced costs by $1M annually.
+          - id: homeready
+            title: Connecting lending software to HomeReady.
+            label: HomeReady
+            metric:
+              value: "$44M"
+              label: in funded loans the integrations contributed to
+            summary: Integrating Fannie Mae’s HomeReady product into the lending workflow.
+            challenge: >-
+              Supporting Fannie Mae’s HomeReady product required integrations with
+              AmeriSave’s lending systems.
+            work: I led the integrations with Fannie Mae’s HomeReady product.
+            result: Those integrations contributed to $44M in funded loans.
+          - id: backend-modernization
+            title: Giving backend teams a stronger foundation.
+            label: Backend modernization
+            metric:
+              value: "NestJS"
+              label: migration from Fastify, with shared backend packages
+            summary: Framework improvements, reusable services, and a move toward TypeScript microservices.
+            challenge: >-
+              I identified opportunities to improve developer productivity and
+              modernize parts of a large, legacy ColdFusion monolith.
+            work: >-
+              I spearheaded the migration from Fastify to NestJS and created
+              in-house packages for authentication, caching, logging, and health
+              status. I also modernized parts of the monolith into TypeScript microservices.
+            result: >-
+              The work introduced shared backend packages and moved parts of the
+              legacy application into a TypeScript microservice architecture.
+            technologies: [TypeScript, NestJS]
+        highlights:
+          - >-
+            Defined the roadmap and led the implementation of a post-fund auditing system,
+            which replaced a vendor’s service, resulting in a cost reduction of $1M annually.
+          - >-
+            Designed a “Credit Precheck Engine” to determine a borrower’s loan eligibility
+            before processing.
+          - >-
+            Led integrations with Fannie Mae’s HomeReady product, contributing to $44M of
+            funded loans.
+          - >-
+            Identified improvements for developer productivity and spearheaded migration
+            from Fastify to NestJS, and created in-house packages for authentication,
+            caching, logging, and health status.
+          - >-
+            Created a fee-matching service, which increased the productivity of fee
+            specialist underwriters by 10%.
+          - >-
+            Modernized parts of a large legacy ColdFusion monolithic service to a
+            microservice architecture written in TypeScript.
+
+      - company: VitalCheck Wellness
+        id: vitalcheck
+        focus: Healthcare
+        overview: Building patient-facing and clinical software for corporate medical wellness.
+        logo: assets/companies/vitalcheck-v.webp
+        logo_background: transparent
+        team: Corporate Medical Wellness
+        role: Software Engineer — Full Stack
+        location: New York, NY
+        period: "August 2020 — April 2022"
+        technologies: [Java, JSP, MongoDB, HTML, CSS, jQuery]
+        stories:
+          - id: vaccination-validation
+            title: Handling vaccination and test submissions at scale.
+            label: Validation
+            metric:
+              value: "300,000+"
+              label: submissions processed
+            summary: A system for validating COVID-19 vaccination and test submissions.
+            challenge: >-
+              COVID-19 vaccination and test submissions needed a validation system
+              capable of supporting a large volume of records.
+            work: I built the COVID-19 vaccination and test validation system.
+            result: The system processed more than 300,000 submissions.
+          - id: clinical-workflows
+            title: Building software around clinical encounters.
+            label: Clinical workflows
+            metric:
+              value: "200,000+"
+              label: telemedicine encounters and check-ins generated
+            summary: Attestation software and infrastructure supporting patient care workflows.
+            challenge: >-
+              Corporate medical wellness programs needed software to support
+              vaccination and test attestations, check-ins, and clinical encounters.
+            work: >-
+              I architected, developed, and maintained vaccination and test
+              attestation software. I also created infrastructure for orthopedic
+              clinical encounters.
+            result: >-
+              The attestation software generated more than 200,000 telemedicine
+              encounters and check-ins. The orthopedic infrastructure served over
+              1,000 patients.
+        highlights:
+          - >-
+            Architected, developed, and maintained a COVID-19 Vaccination/Test Attestation,
+            generating 200,000+ telemedicine encounters/check-ins.
+          - >-
+            Built a COVID-19 Vaccination/Test validation system that processed over 300,000
+            submissions.
+          - >-
+            Created an orthopedic clinical encounter infrastructure that serviced over
+            1,000 patients.
+          - >-
+            Led development of medical products for large stakeholders such as BlackRock,
+            Gucci, Balenciaga, and Fordham University.
+
+  - id: skills
+    type: skills
+    title: Skills in practice
+    label: Skills
+    featured: Python
+    intro: Choose a technology to see where I’ve used it and the work behind it.
+    animals:
+      - species: duck
+        count: 3
+    groups:
+      - category: Languages
+        items: [C++, Python, Hack, Java, TypeScript, SQL]
+      - category: Frameworks & Tools
+        items: [Spring Boot, NestJS, Node.js, Redis, GraphQL, Azure, AWS, Datadog]
+
+  # Ready for future projects: add an item, then change enabled to true.
+  # The original resume does not contain a separate project list.
+  - id: projects
+    type: projects
+    title: Projects
+    enabled: false
+    items: []
+    # items:
+    #   - name: Your project
+    #     description: What you built and why it matters.
+    #     technologies: [TypeScript, Node.js]
+    #     highlights:
+    #       - A concrete result or contribution.
+    #     url: https://example.com

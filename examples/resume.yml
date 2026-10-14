@@ -1,0 +1,113 @@
+# Copy this file over dist/content/resume.yml to adapt the project for someone else.
+# All entries below are examples, not claims about Robert Skonieczny.
+version: 1
+profile:
+  name: Your Name
+  headline: Your Role
+  location: City, Country
+  summary: >-
+    A short introduction to your work, interests, and the problems you enjoy solving.
+  email: hello@example.com
+  # Copy your own PDF into dist/assets/resume/ and uncomment:
+  # resume_pdf: assets/resume/your-resume.pdf
+  # phone: "+1 555 010 1234"
+  links:
+    - label: Portfolio
+      url: https://example.com
+
+sections:
+  - id: about
+    type: about
+    title: About
+    story_title: A headline that connects the stages of your career.
+    paragraphs:
+      - Explain the kinds of problems you work on and why they matter.
+    animals:
+      - species: rabbit
+        count: 2
+        scale: 1.2
+
+  - id: experience
+    type: experience
+    title: Experience
+    animals:
+      - species: fox
+    items:
+      - company: Company Name
+        id: company-name
+        focus: Infrastructure
+        overview: Describe the systems you worked on and who they helped.
+        # Put your image in dist/assets/companies/, then uncomment:
+        # logo: assets/companies/your-company.png
+        # logo_background: light  # light, dark, or transparent
+        role: Your Job Title
+        period: "2024 — Present"
+        location: City, Country
+        technologies: [Python, SQL]
+        stories:
+          - id: selected-project
+            title: A specific project worth exploring.
+            label: Selected project
+            summary: What you built and why it mattered.
+            challenge: Explain the problem and the context behind it.
+            work: Describe your contribution and a decision you made.
+            result: State the outcome without losing important qualifications.
+            technologies: [Python]
+            # Optional: add a quoted metric value and an explanatory label.
+            # metric:
+            #   value: "Your result"
+            #   label: Context that makes the result meaningful
+        highlights:
+          - Describe your contribution and the result it produced.
+          - Add another achievement here.
+
+  - id: projects
+    type: projects
+    title: Projects
+    animals:
+      - species: turtle
+        count: 2
+    items:
+      - name: Project Name
+        description: What the project does and why you built it.
+        technologies: [TypeScript, Node.js]
+        highlights:
+          - Your contribution or a measurable result.
+        url: https://example.com/project
+
+  - id: skills
+    type: skills
+    title: Skills
+    featured: Python
+    animals:
+      - species: duck
+        count: 3
+    groups:
+      - category: Languages
+        items: [Python, TypeScript, SQL]
+      - category: Tools
+        items: [Git, Docker]
+
+  - id: education
+    type: education
+    title: Education
+    animals:
+      - species: deer
+    items:
+      - institution: Your University
+        degree: Your Degree
+        period: "2019 — 2023"
+        highlights:
+          - Optional honors, coursework, or a thesis.
+
+  - id: volunteering
+    type: text
+    title: Volunteering
+    enabled: false
+    # Change enabled to true to add this island.
+    paragraphs:
+      - Describe your volunteer work here.
+      - Each entry becomes a separate paragraph.
+    links:
+      - label: Organization
+        url: https://example.com

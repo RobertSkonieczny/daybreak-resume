@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#193e3d">
+  <meta name="description" content="Take the oars. An interactive journey across a quiet lake at daybreak.">
+  <title>A journey on the water</title>
+  <link rel="stylesheet" href="styles.css?v=story-3">
+</head>
+<body>
+  <div id="lake" aria-label="Interactive three-dimensional lake with a rowboat at sunrise"></div>
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="header">
+    <div class="header-actions">
+      <button class="icon-button" id="sound" aria-label="Turn on lake sounds" aria-pressed="false" title="Lake sounds">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4V5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path class="sound-on" d="M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path class="sound-off" d="m16 10 5 5m0-5-5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+      <button class="icon-button" id="help" aria-label="Open rowing controls" title="How to row"><span class="help-icon">?</span></button>
+      <button class="outline-button" id="map-toggle" aria-label="Journey map" aria-expanded="false" aria-controls="map-panel"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5Zm6-2v16M15 5v16" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span>The journey</span></button>
+      <a class="resume-pdf-link" id="resume-pdf" href="assets/resume/robert-skonieczny-resume.pdf" target="_blank" rel="noopener" aria-label="View my résumé PDF (opens in a new tab)" title="Prefer the PDF? Open my résumé">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8l-5-5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M14 3v5h5M8 12h8M8 16h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span>View résumé</span><span class="pdf-arrow" aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro" id="intro" aria-labelledby="intro-title">
+      <div class="eyebrow"><span class="line"></span><span id="intro-identity">WELCOME TO MY LITTLE CORNER OF THE WORLD</span></div>
+      <h1 id="intro-title">Let’s explore<br><em>my experience.</em></h1>
+      <button class="primary-button" id="start" disabled><span>Step aboard</span><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </section>
+
+    <div id="waypoints" aria-label="Destinations on the lake"></div>
+    <aside class="map-panel" id="map-panel" hidden>
+      <div class="map-heading"><span>YOUR LITTLE WORLD</span><button id="map-close" aria-label="Close map">×</button></div>
+      <canvas id="map" width="480" height="360" aria-label="Lake map. Choose a shore on the map or use its destination buttons."></canvas>
+      <div class="map-legend"><span><i></i> You are here</span><span>Choose a shore to explore</span></div>
+      <nav class="map-destinations" id="route" aria-label="Resume destinations"></nav>
+    </aside>
+
+    <section class="chapter-panel" id="chapter-panel" aria-labelledby="chapter-title" hidden>
+      <button class="panel-close" id="chapter-close" aria-label="Close destination">×</button>
+      <div class="eyebrow" id="chapter-number">SHORE 01</div>
+      <h2 id="chapter-title" tabindex="-1">About</h2>
+      <div class="chapter-content" id="chapter-content" tabindex="0" aria-label="Resume section details"></div>
+      <button id="continue" class="text-button">On to the next shore <span>↗</span></button>
+      <button id="chapter-scroll-hint" class="chapter-scroll-hint" aria-label="Scroll down for more content" aria-controls="chapter-content" hidden>More below <span aria-hidden="true">↓</span></button>
+    </section>
+
+    <div class="sailing-hud" id="sailing-hud" hidden>
+      <div class="eyebrow"><span class="small-dot"></span><span id="travel-state">EXPLORING THE LAKE</span></div>
+      <div class="hud-title" id="travel-title">Follow your curiosity.</div>
+      <button id="cancel-course" class="text-button" hidden>Take the oars yourself <span>↗</span></button>
+    </div>
+    <div class="view-controls" id="view-controls" hidden>
+      <button class="round-button" id="motion" aria-label="Pause ambient motion" aria-pressed="false" title="Pause ambient motion"><span id="motion-icon">Ⅱ</span></button>
+    </div>
+
+    <button class="book-hotspot" id="contact-book" hidden aria-label="Open the contact book"><span>Contact book</span><span aria-hidden="true">↗</span></button>
+
+    <div class="touch-controls" id="touch-controls" hidden aria-label="Touch rowing controls">
+      <button data-key="ArrowUp" class="touch-forward" aria-label="Row forward">↑</button>
+      <button data-key="ArrowLeft" class="touch-left" aria-label="Steer left">←</button>
+      <button data-key="ArrowDown" class="touch-back" aria-label="Row backward">↓</button>
+      <button data-key="ArrowRight" class="touch-right" aria-label="Steer right">→</button>
+    </div>
+
+    <div class="status-toast" id="toast" role="status" aria-live="polite"></div>
+    <div id="fallback" hidden><h2>A quieter view of the lake.</h2><p>Your browser couldn’t start the 3D scene. Try enabling hardware acceleration or opening this page in another browser.</p><button onclick="location.reload()" class="primary-button">Try again ↗</button></div>
+    <div id="content-error" role="alert" hidden><h2>The resume couldn’t load.</h2><p>Check <code>content/resume.yml</code>, then refresh the page.</p><pre id="content-error-detail"></pre><button onclick="location.reload()" class="primary-button">Try again ↗</button></div>
+  </main>
+
+  <dialog id="help-dialog">
+    <button class="panel-close" id="help-close" aria-label="Close controls">×</button>
+    <div class="eyebrow">A FEW GENTLE DIRECTIONS</div><h2>Make yourself<br><em>at home.</em></h2>
+    <p>Row toward any island and its story will open automatically. Close it to keep exploring. The book in your boat holds my contact information. Open the map for a guided trip.</p>
+    <div class="control-row"><span><kbd>W</kbd> <kbd>S</kbd><span class="or">or</span><kbd>↑</kbd> <kbd>↓</kbd></span><span>Row forward / back</span></div>
+    <div class="control-row"><span><kbd>A</kbd> <kbd>D</kbd><span class="or">or</span><kbd>←</kbd> <kbd>→</kbd></span><span>Steer the boat</span></div>
+    <div class="control-row"><span>Click + drag</span><span>Look around</span></div>
+    <div class="control-row"><span>Click the book</span><span>Get in touch</span></div>
+    <div class="control-row"><span>Choose a shore on the map</span><span>Glide to that shore</span></div>
+    <div class="control-row"><span>Near an island</span><span>Its section opens for you</span></div>
+    <div class="control-row"><span><kbd>Esc</kbd></span><span>Close a section and keep rowing</span></div>
+    <p class="mobile-help">On a touchscreen, use the arrow controls to row and drag across the water to look around.</p>
+    <button id="help-done" class="primary-button">Let’s explore <span>↗</span></button>
+  </dialog>
+  <noscript><div class="noscript">This interactive lake needs JavaScript. Please enable it to take the oars.</div></noscript>
+  <script type="module" src="app.js?v=story-3"></script>
+</body>
+</html>
