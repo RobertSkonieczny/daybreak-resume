@@ -195,7 +195,7 @@ The included [deployment workflow](.github/workflows/deploy-pages.yml) validates
 2. From this project folder, initialize Git and push the project. Replace `YOUR_USERNAME` with your GitHub account name:
 
    ```sh
-   cd /Users/robertskonieczny/Sites/daybreak-resume
+   cd /Users/robertskonieczny/Sites/me
    git init -b main
    git add .
    git commit -m "Add interactive resume website"
