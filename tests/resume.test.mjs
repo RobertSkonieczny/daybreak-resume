@@ -4,6 +4,7 @@ import { parseResume, validateResume, getSkillEvidence } from '../dist/resume-da
 import { createStops, islandProximity, planCourse } from '../dist/navigation.js';
 import { ANIMAL_SPECIES, expandAnimals } from '../dist/animal-config.js';
 import { buildAnimal, createWildlife } from '../dist/wildlife.js';
+import {ANIMAL_MOTION} from '../dist/animal-motion.js';
 import * as THREE from '../dist/vendor/three.module.js';
 
 // Check the author's file without tying reusable tests to their name or career.
@@ -102,11 +103,11 @@ for(const species of ANIMAL_SPECIES){
   const model=buildAnimal(species),size=new THREE.Box3().setFromObject(model.root).getSize(new THREE.Vector3());
   assert.ok(size.toArray().every(v=>Number.isFinite(v)&&v>0),`${species} has valid 3D geometry`);
 }
-const scene=new THREE.Scene(),wildlife=createWildlife(scene),island=new THREE.Group();scene.add(island);
+const scene=new THREE.Scene(),wildlife=createWildlife(scene,{random:()=>0}),island=new THREE.Group();scene.add(island);
 const animalStop={...stops[0],section:{id:'wildlife',animals:[{species:'fox'},{species:'duck',count:2,scale:1.5}]}};
 island.position.set(animalStop.islandX,0,animalStop.islandZ);
 wildlife.populateIsland(island,animalStop,0);
-assert.deepEqual(island.children.map(child=>child.scale.x),[.5,.75,.75],'all island animals use the requested half-size base');
+assert.deepEqual(island.children.map(child=>child.scale.x),[1,1.5,1.5],'YAML scale multiplies the realistic species dimensions');
 const camera=new THREE.PerspectiveCamera();scene.updateMatrixWorld(true);
 assert.equal(wildlife.snapshot(camera,100,100).animals.length,3);
 wildlife.update(4,{x:0,z:16,heading:0});
@@ -114,4 +115,55 @@ assert.equal(wildlife.snapshot(camera,100,100).fishVisible,1,'a fish begins its 
 wildlife.update(6,{x:0,z:16,heading:0});
 assert.equal(wildlife.snapshot(camera,100,100).fishVisible,0,'the fish returns below the water');
 assert.equal(wildlife.snapshot(camera,100,100).jumps,1);
-console.log('PASS configurable wildlife, half-size models, local PDF paths, and fish jump lifecycle.');
+console.log('PASS configurable wildlife, realistic model scales, local PDF paths, and fish jump lifecycle.');
+
+// Supported size/count extremes must also start clear before any motion runs.
+for(const angle of [0,Math.PI/2,Math.PI]){
+  let seed=270;
+  const crowdedScene=new THREE.Scene(),crowdedIsland=new THREE.Group();crowdedScene.add(crowdedIsland);
+  const crowdedWildlife=createWildlife(crowdedScene,{random:()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296)});
+  const population=angle===0?[{species:'deer',scale:2,count:2},{species:'rabbit',scale:.5,count:6}]:[{species:'deer',scale:2,count:8}];
+  const crowdedStop={x:Math.cos(angle)*14,z:Math.sin(angle)*10,islandX:0,islandZ:0,section:{id:'crowded',animals:population}};
+  const placements=crowdedWildlife.populateIsland(crowdedIsland,crowdedStop,0),entries=expandAnimals(crowdedStop.section);
+  for(let i=0;i<placements.length;i++)for(let j=i+1;j<placements.length;j++){
+    const a=placements[i],b=placements[j],r=ANIMAL_MOTION[entries[i].species].radius*entries[i].scale+ANIMAL_MOTION[entries[j].species].radius*entries[j].scale;
+    assert.ok(Math.hypot(a.x-b.x,a.z-b.z)>=r+.199,'large and mixed species start with clear personal space');
+  }
+}
+console.log('PASS initial spacing for crowded islands and mixed animal sizes.');
+
+// Fish leave and re-enter the moving surface, and feed physical ripple impulses.
+const splashScene=new THREE.Scene(),splashes=[];
+const movingWaterFish=createWildlife(splashScene,{sampleWater:()=>.23,onSplash:(...event)=>splashes.push(event),random:()=>0});
+movingWaterFish.update(4,{x:0,z:16,heading:0});
+assert.equal(splashes.length,1,'takeoff disturbs the water');
+movingWaterFish.update(4.45,{x:0,z:16,heading:0});
+const jumpingFish=splashScene.getObjectByName('jumping-fish:0');
+assert.ok(Math.abs(jumpingFish.position.y-.57)<.00001,'the smaller ballistic jump is relative to wave height');
+movingWaterFish.update(6,{x:0,z:16,heading:0});
+assert.equal(splashes.length,2,'landing disturbs the water');
+assert.ok(splashes[1][2]>splashes[0][2],'landing leaves the larger ripple');
+console.log('PASS fish follow the moving surface and generate physical splashes.');
+
+// Even a shore without configured animals must remain off limits to fish.
+const shoreScene=new THREE.Scene(),shoreSplashes=[];
+let wildlifeSeed=37;
+const shoreWildlife=createWildlife(shoreScene,{random:()=>((wildlifeSeed=(Math.imul(wildlifeSeed,1664525)+1013904223)>>>0)/4294967296),onSplash:(x,z)=>shoreSplashes.push({x,z})});
+const emptyShore={islandX:0,islandZ:0,x:12,z:5,section:{id:'empty',animals:[]}};
+shoreWildlife.populateIsland(new THREE.Group(),emptyShore,0);
+for(let frame=0;frame<60*30;frame++){
+  shoreWildlife.update(frame/30,{x:13,z:9,heading:.6});
+  shoreScene.children.filter(child=>child.name.startsWith('jumping-fish:')&&child.visible).forEach(child=>{
+    assert.ok((child.position.x/12.8)**2+(child.position.z/9.1)**2>1,'the entire fish jump stays off the island');
+  });
+}
+assert.ok(shoreSplashes.length>=4,'fish can still find open water near a shoreline');
+assert.ok(shoreSplashes.every(p=>(p.x/12.8)**2+(p.z/9.1)**2>1),'takeoff and landing stay in open water');
+
+// Pausing freezes every joint, not only the root position and visible body.
+const transforms=()=>{const result=[];island.traverse(part=>result.push([...part.position,...part.quaternion,...part.scale]));return result;};
+for(let frame=1;frame<=30;frame++)wildlife.update(6+frame/60,{x:0,z:16,heading:0});
+const frozen=transforms();
+for(let frame=0;frame<5;frame++)wildlife.update(6.5,{x:0,z:16,heading:0});
+assert.deepEqual(transforms(),frozen,'paused wildlife keeps all limb and head transforms unchanged');
+console.log('PASS fish avoid land and ambient pause freezes the complete animal rig.');

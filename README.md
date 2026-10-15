@@ -15,14 +15,21 @@ dist/
   resume-data.js        ← YAML validation and safe content rendering
   navigation.js         ← Automatic island layout and proximity detection
   animal-config.js      ← Supported animal species and configuration defaults
-  wildlife.js           ← Procedural animals, fish jumps, and splashes
-  app.js                ← 3D lake, boat, and camera
+  wildlife.js           ← Island wildlife integration, fish jumps, and splashes
+  animal-models.js      ← Species proportions, materials, and jointed animation rigs
+  animal-motion.js      ← Wandering, grazing, flocking, and boat reactions
+  app.js                ← Scene, boat, and first-person camera
+  wave-field.js         ← Shared wave physics, wind, buoyancy sampling, and ripples
+  lake-water.js         ← Displaced water, reflections, and refraction
+  natural-assets.js     ← Local PBR textures, batched conifers, and shoreline details
 examples/
   resume.yml            ← Reusable example of every supported section type
 scripts/
   validate-resume.mjs   ← Reports mistakes before you refresh
 tests/
   resume.test.mjs       ← Content and navigation behavior checks
+  waves.test.mjs        ← Wave geometry, buoyancy, wind, pause, and splash checks
+  wildlife-motion.test.mjs ← Roaming, boundaries, obstacles, separation, and pause
 ```
 
 `profile` holds your name, headline, location, introduction, email, optional phone number, links, optional `resume_pdf` path, and optional `education`. About and the contact book both use it, so information is only edited once. Contact lives in the book; it has no island. Adding education to `profile` shows it within About, so it does not need a separate island.
@@ -157,9 +164,9 @@ Add an `animals` list to any section:
       - species: turtle
 ```
 
-Available species: `rabbit`, `fox`, `duck`, `deer`, and `turtle`. `count` defaults to 1; `scale` defaults to 1 and accepts 0.5–2. The base models are intentionally small; the island animals were reduced to half their original size. Keep at most 8 animals per island. Mix species in the same list. Omit the list or set `animals: []` for an empty shore. Animals are placed along the shoreline automatically, with room around the trees. They move gently and look toward the boat when you approach.
+Available species: `rabbit`, `fox`, `duck`, `deer`, and `turtle`. `count` defaults to 1; `scale` defaults to 1 and accepts 0.5–2. Scale multiplies each species’ natural proportions: at `scale: 1`, a deer is about 1.5 m tall, a fox 0.55 m, a rabbit 0.39 m including its ears, a duck 0.41 m, and a turtle 0.14 m. This keeps rabbits and turtles much smaller than deer; use `scale` to adjust visibility without changing the model. Keep at most 8 animals per island. Mix species in the same list. Omit the list or set `animals: []` for an empty shore. Animals are placed along the shoreline automatically, with room around the trees. They choose their own destinations and rest times: deer graze, foxes sniff and explore, rabbits hop and forage, ducks wander in a loose flock, and turtles crawl and bask. Their paths avoid tree trunks, rocks, other animals, and the water’s edge. Jointed legs follow distance travelled and adjust to the ground, with smooth acceleration and turning. Each animal has independent attention, ear, and blink timing and can react to a nearby boat. There is no fixed movement loop or shared animation clock.
 
-Small fish occasionally jump near the boat and leave expanding splash rings. The motion control pauses fish, animals, water, and other ambient animation. Reduced-motion preferences pause these effects by default.
+Small trout occasionally jump near the boat, with tapered bodies, fins, and a flexing tail. Each jump gets a fresh location, direction, height, and delay; the flight stays over open water and takeoff and landing disturb the wave surface. The motion control pauses fish, animals, water, and other ambient animation. Reduced-motion preferences pause these effects by default.
 
 ### Check edits
 
@@ -179,9 +186,13 @@ The validator reports malformed YAML with a line and column, missing or misspell
 npm start
 ```
 
-Open http://127.0.0.1:4173. If the preview is already running, just save your edits and refresh. `npm test` runs the content and proximity checks.
+Open http://127.0.0.1:4173. If the preview is already running, just save your edits and refresh. `npm test` runs the content, proximity, wildlife movement, and wave-physics checks.
 
 Use W/S or up/down to row and A/D or left/right to steer. Drag the water to look around from your seat. Touch devices have arrow controls. Near an island, the boat stops and opens that section. Scroll inside long sections; Escape or the close button returns to rowing. Arrow keys scroll a focused open panel, or switch between focused company cards. Holding a rowing key through arrival does not dismiss the panel. Click the physical book or its accessible “Contact book” button for contact details. Reduced-motion preferences skip the camera animation and guided travel animation.
+
+The water is a displaced mesh with eight crossing Gerstner waves. Each visit gets fresh wave directions, wavelengths, and phases; new random wind targets also arrive throughout the session, with smooth transitions. The boat samples the same displaced surface for its height, pitch, and roll. Oar strokes and fish landings add temporary surface ripples. Reflections include the islands and sky; depth-based refraction reveals submerged shorelines. The first-person camera keeps a steady horizon while riding the water.
+
+Wavelengths and base amplitudes live in `dist/wave-field.js`. Surface shading and the reflection/refraction resolution limits live in `dist/lake-water.js`. The mesh is densest near the boat and uses fewer vertices toward the horizon. Phones use a smaller mesh, render textures, and shadow map. The motion control freezes wind evolution, wave phases, splashes, and idle boat movement; it remains possible to row and open sections.
 
 The lake and all models are procedural. Three.js and js-yaml are vendored with their MIT licenses. All runtime files are local; there are no external API calls or analytics.
 
